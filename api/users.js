@@ -94,12 +94,10 @@ const userRegistrationSchema = yup.object().shape({
     return value instanceof Date && !isNaN(value);
   }),
   depart_vehicle_type: yup.string().required(),
-  depart_on: yup.string().required(),
   return_at: yup.date().required().typeError('Invalid return_at format').test('datetime', 'Invalid return_at format', (value) => {
     return value instanceof Date && !isNaN(value);
   }),
   return_vehicle_type: yup.string().required(),
-  return_on: yup.string().required(),
 });
 
 const userRegistrationValidation = async (req, res, next) => {
