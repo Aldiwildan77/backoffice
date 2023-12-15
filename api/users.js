@@ -2,6 +2,12 @@ const router = require('express').Router();
 const db = require('../database');
 const yup = require('yup');
 
+const mailer = require('../nodemailer');
+const { templateQRRegistration } = require('../templates/qr');
+const { templateWelcoming } = require('../templates/welcoming');
+
+const emailFrom = '"MS Glow 7th Anniversary" <msglow7thanniv@gmail.com>';
+
 const getUsersSchema = yup.object().shape({
   page: yup.number().min(1),
   limit: yup.number().max(100),
@@ -154,7 +160,17 @@ const userRegistration = async (req, res, next) => {
       throw error;
     }
 
-    // TODO: send qr code email
+    // send email
+    const mailTransporter = mailer.config(0);
+    const mailConfig = {
+      from: emailFrom,
+      to: request.email,
+      subject: '[QR Code] Registration Successful for MS GLOW SPEK7A INDRALOKA - The MS Glow\'s 7th Anniversary Event!',
+      html: templateQRRegistration(request),
+    };
+
+    mailer.sendMail(mailTransporter, mailConfig).
+      catch(error => { console.error(error, { email: request }); });
 
     return res.status(200).json({ message: 'registration success' });
   } catch (error) {
@@ -199,7 +215,17 @@ const userCheckIn = async (req, res, next) => {
       throw errorUpdate;
     }
 
-    // TODO: send welcoming email
+    // send email
+    const mailTransporter = mailer.config(0);
+    const mailConfig = {
+      from: emailFrom,
+      to: request.email,
+      subject: '[Seat Number] MS GLOW SPEK7A INDRALOKA Check-In Confirmation and Seat Assignment',
+      html: templateWelcoming(data[0]),
+    };
+
+    mailer.sendMail(mailTransporter, mailConfig).
+      catch(error => { console.error(error, { email: request }); });
 
     return res.status(200).json({ message: 'check in success' });
   } catch (error) {
