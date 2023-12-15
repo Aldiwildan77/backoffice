@@ -3,7 +3,9 @@ const app = express();
 const fileUpload = require("express-fileupload");
 
 const { PORT } = require("./config");
+const { limiter } = require("./middleware/ratelimit");
 
+app.use(limiter);
 app.use(express.json({ extended: false }));
 app.use(fileUpload());
 app.use(require("./api"));
