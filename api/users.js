@@ -169,7 +169,7 @@ const userRegistration = async (req, res, next) => {
       html: templateQRRegistration(request),
     };
 
-    mailer.sendMail(mailTransporter, mailConfig).
+    await mailer.sendMail(mailTransporter, mailConfig).
       catch(error => { console.error(error, { email: request }); });
 
     return res.status(201).json({ message: 'registration success' });
@@ -224,7 +224,7 @@ const userCheckIn = async (req, res, next) => {
       html: templateWelcoming(data[0]),
     };
 
-    mailer.sendMail(mailTransporter, mailConfig).
+    await mailer.sendMail(mailTransporter, mailConfig).
       catch(error => { console.error(error, { email: request }); });
 
     return res.status(200).json({ message: 'check in success' });
