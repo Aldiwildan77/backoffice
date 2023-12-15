@@ -25,19 +25,27 @@ const getUsers = async (req, res, next) => {
 
   try {
     let rdb = db.from('users').select('email', { count: 'exact' });
-    if (request.email) rdb = rdb.match({ email: request.email });
+    if (request.email) {
+      rdb = rdb.match({ email: request.email });
+    }
 
     const { error: countError, count } = await rdb;
-    if (countError) throw countError;
+    if (countError) {
+      throw countError;
+    }
 
     const from = (request.page - 1) * request.limit;
-    const to = request.page * request.limit;
+    const to = request.page * request.limit - 1;
 
     let ldb = db.from('users').select().range(from, to);
-    if (request.email) ldb = ldb.match({ email: request.email });
+    if (request.email) {
+      ldb = ldb.match({ email: request.email });
+    }
 
     const { data, error } = await ldb;
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
 
     const response = {
       data: data,
@@ -77,7 +85,9 @@ const setSeatTable = async (req, res, next) => {
 
   try {
     const { error } = await db.from('users').update({ seat_table: request.seat_table }).match({ email: request.email });
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
     return res.status(200).json({ message: 'set seat table success' });
   } catch (error) {
     next(error);
@@ -121,20 +131,28 @@ const userRegistration = async (req, res, next) => {
     depart_vehicle_type: req.body.depart_vehicle_type,
     depart_flight_number: req.body.depart_flight_number,
     depart_airline: req.body.depart_airline,
+    depart_train_name: req.body.depart_train_name,
     return_at: req.body.return_at,
     return_vehicle_type: req.body.return_vehicle_type,
     return_flight_number: req.body.return_flight_number,
     return_airline: req.body.return_airline,
+    return_train_name: req.body.return_train_name,
     qr_link: constructQRLink(req.body.email)
   };
 
   try {
     const { data: dataEmail, error: errorEmail } = await db.from('users').select().match({ email: request.email });
-    if (errorEmail) throw errorEmail;
-    if (dataEmail.length > 0) return res.status(200).json({ message: 'email already registered' });
+    if (errorEmail) {
+      throw errorEmail;
+    }
+    if (dataEmail.length > 0) {
+      return res.status(200).json({ message: 'email already registered' });
+    }
 
     const { error } = await db.from('users').insert(request);
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
 
     // TODO: send qr code email
 
@@ -169,11 +187,17 @@ const userCheckIn = async (req, res, next) => {
 
   try {
     const { data, error } = await db.from('users').select().match({ email: request.email });
-    if (error) throw error;
-    if (data.length === 0) return res.status(400).json({ message: 'email not registered' });
+    if (error) {
+      throw error;
+    }
+    if (data.length === 0) {
+      return res.status(400).json({ message: 'email not registered' });
+    }
 
     const { error: errorUpdate } = await db.from('users').update({ checked_in: true }).match({ email: request.email });
-    if (errorUpdate) throw errorUpdate;
+    if (errorUpdate) {
+      throw errorUpdate;
+    }
 
     // TODO: send welcoming email
 
@@ -186,7 +210,9 @@ const userCheckIn = async (req, res, next) => {
 const exportUsers = async (req, res, next) => {
   try {
     const { data, error } = await db.from('users').select();
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
 
     const csv = convertToCSV(data);
     const filename = `users-${Date.now()}.csv`;
@@ -208,10 +234,14 @@ const convertToCSV = (data) => {
 
 const setSeatTables = async (req, res, next) => {
   // get uploaded file
-  const file = req.files.file;
-  if (!file) return res.status(400).json({ message: 'file not found' });
+  const { file } = req.files;
+  if (!file) {
+    return res.status(400).json({ message: 'file not found' });
+  }
 
-  if (file.mimetype !== 'text/csv') return res.status(400).json({ message: 'please upload file with csv format' });
+  if (file.mimetype !== 'text/csv') {
+    return res.status(400).json({ message: 'please upload file with csv format' });
+  }
 
   // convert csv to array of object
   const csv = file.data.toString('utf8');
@@ -222,8 +252,12 @@ const setSeatTables = async (req, res, next) => {
   const emailIndex = header.indexOf('email');
   const seatTableIndex = header.indexOf('seat_table');
 
-  if (emailIndex === -1) return res.status(400).json({ message: 'email column not found' });
-  if (seatTableIndex === -1) return res.status(400).json({ message: 'seat_table column not found' });
+  if (emailIndex === -1) {
+    return res.status(400).json({ message: 'email column not found' });
+  }
+  if (seatTableIndex === -1) {
+    return res.status(400).json({ message: 'seat_table column not found' });
+  }
 
   // construct data
   const data = rows.map(row => {
@@ -238,7 +272,9 @@ const setSeatTables = async (req, res, next) => {
   try {
     for (const item of data) {
       const { error } = await db.from('users').update({ seat_table: item.seat_table }).match({ email: item.email });
-      if (error) throw error;
+      if (error) {
+        throw error;
+      }
     }
     return res.status(200).json({ message: 'set seat tables success' });
   } catch (error) {
