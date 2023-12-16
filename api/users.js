@@ -172,7 +172,7 @@ const userRegistration = async (req, res, next) => {
     await mailer.sendMail(mailTransporter, mailConfig).
       catch(error => { console.error(error, { email: request }); });
 
-    return res.status(201).json({ message: 'registration success' });
+    return res.status(201).json({ message: 'registration success', data: { email: request.email, qr_link: request.qr_link } });
   } catch (error) {
     next(error);
   }
