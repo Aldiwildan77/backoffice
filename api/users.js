@@ -152,7 +152,7 @@ const userRegistration = async (req, res, next) => {
       throw errorEmail;
     }
     if (dataEmail.length > 0) {
-      return res.status(200).json({ message: 'email already registered' });
+      return res.status(400).json({ message: 'email already registered' });
     }
 
     const { error } = await db.from('users').insert(request);
