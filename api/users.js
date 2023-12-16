@@ -6,7 +6,7 @@ const mailer = require('../nodemailer');
 const { templateQRRegistration } = require('../templates/qr');
 const { templateWelcoming } = require('../templates/welcoming');
 
-const emailFrom = '"MS Glow 7th Anniversary" <msglow7thanniv@gmail.com>';
+const emailFrom = '"MS Glow 7th Anniversary" <info@msglowid.com>';
 
 const getUsersSchema = yup.object().shape({
   page: yup.number().min(1),
