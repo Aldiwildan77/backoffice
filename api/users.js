@@ -202,7 +202,7 @@ const userCheckIn = async (req, res, next) => {
   };
 
   try {
-    const { data, error } = await db.from('users').select().match({ email: request.email });
+    const { data, error } = await db.from('users').select("*").match({ email: request.email });
     if (error) {
       throw error;
     }

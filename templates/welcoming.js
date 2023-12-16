@@ -1,5 +1,5 @@
 const templateWelcoming = (request) => {
-  const seatNumber = request.seat_number || "-";
+  const seatNumber = request.seat_table || '-';
   return `<h3>Dear ${request.name},</h3>
 
 <p>A warm welcome to you! We trust this email finds you in great spirits as we eagerly anticipate the "MS GLOW SPEK7A INDRALOKA - The 7th Anniversary" event. Your enthusiasm for being a part of this milestone celebration has not gone unnoticed, and we are delighted to have you with us.</p>
