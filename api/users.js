@@ -291,6 +291,11 @@ const setSeatTables = async (req, res, next) => {
 
   // get email and seat table header index by name from csv
   const header = rows[0].split(',');
+
+  for (i = 0; i < header.length; i++) {
+    header[i] = header[i].trim().replace(/\r?\n|\r/g, '');
+  }
+
   const emailIndex = header.indexOf('email');
   const seatTableIndex = header.indexOf('seat_table');
 
