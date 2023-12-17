@@ -242,12 +242,26 @@ const exportUsers = async (req, res, next) => {
       throw error;
     }
 
+    for (const item of data) {
+      delete item.id;
+      delete item.created_at;
+      delete item.updated_at;
+      for (const key in item) {
+        if (typeof item[key] !== 'string') {
+          continue;
+        }
+        if (item[key].includes("\,")) {
+          item[key] = `\"${item[key]}\"`;
+        }
+      }
+    }
+
     const csv = convertToCSV(data);
     const filename = `users-${Date.now()}.csv`;
 
     res.setHeader('Content-Type', 'text/csv');
     res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
-    return res.status(200).send(csv);
+    return res.status(201).send(csv);
   } catch (error) {
     next(error);
   }
