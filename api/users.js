@@ -236,10 +236,20 @@ const userCheckIn = async (req, res, next) => {
 };
 
 const exportUsers = async (req, res, next) => {
+  maximumRows = 1000;
   try {
-    const { data, error } = await db.from('users').select();
+    const { error, count } = await db.from('users').select('email', { count: 'exact' });
     if (error) {
       throw error;
+    }
+
+    let data = [];
+    for (let i = 0; i < Math.ceil(count / maximumRows); i++) {
+      const { data: items, error } = await db.from('users').select().range(i * maximumRows, (i + 1) * maximumRows - 1);
+      if (error) {
+        throw error;
+      }
+      data.push(...items);
     }
 
     for (const item of data) {
