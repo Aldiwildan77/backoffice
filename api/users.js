@@ -138,11 +138,13 @@ const userRegistration = async (req, res, next) => {
     depart_flight_number: req.body.depart_flight_number,
     depart_airline: req.body.depart_airline,
     depart_train_name: req.body.depart_train_name,
+    depart_vehicle_additional_info: req.body.depart_vehicle_additional_info,
     return_at: req.body.return_at,
     return_vehicle_type: req.body.return_vehicle_type,
     return_flight_number: req.body.return_flight_number,
     return_airline: req.body.return_airline,
     return_train_name: req.body.return_train_name,
+    return_vehicle_additional_info: req.body.return_vehicle_additional_info,
     qr_link: constructQRLink(req.body.email)
   };
 
