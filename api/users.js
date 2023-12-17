@@ -10,7 +10,7 @@ const emailFrom = '"MS Glow 7th Anniversary" <info@msglowid.com>';
 
 const getUsersSchema = yup.object().shape({
   page: yup.number().min(1),
-  limit: yup.number().max(100),
+  limit: yup.number().max(1000),
 });
 
 const getUsersValidation = async (req, res, next) => {
