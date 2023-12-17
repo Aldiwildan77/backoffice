@@ -32,7 +32,7 @@ const getUsers = async (req, res, next) => {
   try {
     let rdb = db.from('users').select('email', { count: 'exact' });
     if (request.email) {
-      rdb = rdb.match({ email: request.email });
+      rdb = rdb.like('email', `%${request.email}%`);
     }
 
     const { error: countError, count } = await rdb;
@@ -45,7 +45,7 @@ const getUsers = async (req, res, next) => {
 
     let ldb = db.from('users').select().range(from, to);
     if (request.email) {
-      ldb = ldb.match({ email: request.email });
+      ldb = ldb.like('email', `%${request.email}%`);
     }
 
     const { data, error } = await ldb;
