@@ -301,6 +301,10 @@ const setSeatTables = async (req, res, next) => {
     return res.status(400).json({ message: 'seat_table column not found' });
   }
 
+  if (header.length !== 2) {
+    return res.status(400).json({ message: 'column allowed only email and seat_table' });
+  }
+
   // construct data
   const data = rows.map(row => {
     const columns = row.split(',');
