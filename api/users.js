@@ -43,7 +43,7 @@ const getUsers = async (req, res, next) => {
     const from = (request.page - 1) * request.limit;
     const to = request.page * request.limit - 1;
 
-    let ldb = db.from('users').select().range(from, to);
+    let ldb = db.from('users').select().range(from, to).order('name', { ascending: true });
     if (request.email) {
       ldb = ldb.like('email', `%${request.email}%`);
     }
